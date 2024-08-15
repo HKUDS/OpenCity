@@ -1,0 +1,6 @@
+fastdtw
+numpy
+pandas
+scipy
+tqdm
+tslearn
