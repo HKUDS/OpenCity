@@ -1,6 +1,5 @@
 # OpenCity: Open Spatio-Temporal Foundation Models for Traffic Prediction
 
-<img src='urbanGPTarticle cover.jpeg' />
 
 A pytorch implementation for the paper: [UrbanGPT: Spatio-Temporal Large Language Models]<br />  
 
@@ -51,6 +50,13 @@ Experimental results demonstrate that OpenCity exhibits exceptional zero-shot pr
 </p>
 
 ![The detailed framework of the proposed OpenCity.](https://github.com/OpenCity-ST/OpenCity-ST.github.io/blob/main/images/framework.png)
+
+## Main Results
+**Outstanding Zero-shot Prediction Performance.** OpenCity achieves significant zero-shot learning breakthroughs, outperforming most baselines even without fine-tuning. This highlights the approach's robustness and effectiveness at learning complex spatio-temporal patterns in large-scale traffic data, extracting universal insights applicable across downstream tasks.
+ 
+![Zero-shot vs. Full-shot.](https://github.com/OpenCity-ST/OpenCity-ST.github.io/blob/main/images/zero-shot.png)
+
+
 
 <!--
 ### Demo Video
