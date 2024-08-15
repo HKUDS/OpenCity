@@ -1,7 +1,7 @@
 # OpenCity: Open Spatio-Temporal Foundation Models for Traffic Prediction
 
 
-A pytorch implementation for the paper: [UrbanGPT: Spatio-Temporal Large Language Models]<br />  
+A pytorch implementation for the paper: [OpenCity: Open Spatio-Temporal Foundation Models for Traffic Prediction]<br />  
 
 [Zhonghang Li](https://scholar.google.com/citations?user=__9uvQkAAAAJ), [Long Xia](https://scholar.google.com/citations?user=NRwerBAAAAAJ), [Lei Shi](https://harryshil.github.io/), [Yong Xu](https://scholar.google.com/citations?user=1hx5iwEAAAAJ), [Dawei Yin](https://www.yindawei.com/), [Chao Huang](https://sites.google.com/view/chaoh)* (*Correspondence)<br />  
 
@@ -60,7 +60,7 @@ Experimental results demonstrate that OpenCity exhibits exceptional zero-shot pr
 
 <!--
 ### Demo Video
-https://github.com/HKUDS/UrbanGPT/assets/90381931/9cd094b4-8fa3-486f-890d-631a08b19b4a
+https://github.com/HKUDS/OpenCity/assets/90381931/9cd094b4-8fa3-486f-890d-631a08b19b4a
 -->
 -----------
 <span id='Usage'/>
@@ -68,18 +68,14 @@ https://github.com/HKUDS/UrbanGPT/assets/90381931/9cd094b4-8fa3-486f-890d-631a08
 ## Getting Started
 
 <span id='all_catelogue'/>
-<!--
+
 ### Table of Contents:
 * <a href='#Code Structure'>1. Code Structure</a>
 * <a href='#Environment'>2. Environment </a>
-* <a href='#Training UrbanGPT'>3. Training UrbanGPT </a>
-  * <a href='#Prepare Pre-trained Checkpoint'>3.1. Prepare Pre-trained Checkpoint</a>
-  * <a href='#Instruction Tuning'>3.2. Instruction Tuning</a>
-* <a href='#Evaluating UrbanGPT'>4. Evaluating UrbanGPT</a>
-  * <a href='#Preparing Checkpoints and Data'>4.1. Preparing Checkpoints and Data</a>
-  * <a href='#Running Evaluation'>4.2. Running Evaluation</a>
-  * <a href='#Evaluation Metric Calculation'>4.3. Evaluation Metric Calculation</a>
-* <a href='#Instructions Generation'>5. Instructions Generation </a>
+* <a href='#Training OpenCity'>3. Training OpenCity </a>
+  * <a href='#Preparing Pre-trained Data'>3.1. Preparing Pre-trained Data</a>
+  * <a href='#Pre-training'>3.2. Pre-training</a>
+* <a href='#Evaluating'>4. Evaluating</a>
 ****
 
 
@@ -88,116 +84,87 @@ https://github.com/HKUDS/UrbanGPT/assets/90381931/9cd094b4-8fa3-486f-890d-631a08
 ### 1. Code Structure <a href='#all_catelogue'>[Back to Top]</a>
 
 ```
-.
-|   README.md
-|   urbangpt_eval.sh
-|   urbangpt_train.sh
-|   
-+---checkpoints
-|   \---st_encoder
-|           pretrain_stencoder.pth
-|           
-+---playground
-|   |   inspect_conv.py
-|   |   
-|   +---test_embedding
-|   |       README.md
-|   |       test_classification.py
-|   |       test_semantic_search.py
-|   |       test_sentence_similarity.py
-|   |       
-|   \---test_openai_api
-|           anthropic_api.py
-|           openai_api.py
-|           
-+---tests
-|       test_openai_curl.sh
-|       test_openai_langchain.py
-|       test_openai_sdk.py
-|       
-\---urbangpt
-    |   constants.py
-    |   conversation.py
-    |   utils.py
-    |   __init__.py
-    |   
-    +---eval
-    |   |   run_urbangpt.py                     # evaluation
-    |   |   run_vicuna.py
-    |   |   
-    |   \---script
-    |           run_model_qa.yaml
-    |           
-    +---model
-    |   |   apply_delta.py
-    |   |   apply_lora.py
-    |   |   builder.py
-    |   |   compression.py
-    |   |   convert_fp16.py
-    |   |   make_delta.py
-    |   |   model_adapter.py
-    |   |   model_registry.py
-    |   |   monkey_patch_non_inplace.py
-    |   |   STLlama.py                          # model
-    |   |   utils.py
-    |   |   __init__.py
-    |   |   
-    |   \---st_layers
-    |           args.py
-    |           ST_Encoder.conf
-    |           ST_Encoder.py                   # ST-Encoder
-    |           __init__.py
-    |           
-    +---protocol
-    |       openai_api_protocol.py
-    |       
-    +---serve
-    |   |   api_provider.py
-    |   |   bard_worker.py
-    |   |   cacheflow_worker.py
-    |   |   cli.py
-    |   |   controller.py
-    |   |   controller_graph.py
-    |   |   gradio_block_arena_anony.py
-    |   |   gradio_block_arena_named.py
-    |   |   gradio_css.py
-    |   |   gradio_patch.py
-    |   |   gradio_web_server.py
-    |   |   gradio_web_server_graph.py
-    |   |   gradio_web_server_multi.py
-    |   |   huggingface_api.py
-    |   |   inference.py
-    |   |   model_worker.py
-    |   |   model_worker_graph.py
-    |   |   openai_api_server.py
-    |   |   register_worker.py
-    |   |   test_message.py
-    |   |   test_throughput.py
-    |   |   __init__.py
-    |   |   
-    |   +---examples
-    |   |       extreme_ironing.jpg
-    |   |       waterview.jpg
-    |   |       
-    |   +---gateway
-    |   |       nginx.conf
-    |   |       README.md
-    |   |       
-    |   \---monitor
-    |           basic_stats.py
-    |           clean_battle_data.py
-    |           elo_analysis.py
-    |           hf_space_leaderboard_app.py
-    |           monitor.py
-    |           
-    \---train
-            llama2_flash_attn_monkey_patch.py
-            llama_flash_attn_monkey_patch.py
-            stchat_trainer.py
-            train_lora.py
-            train_mem.py
-            train_st.py                         # train
-            
+├── conf/
+│   ├── AGCRN/
+│   │   └── AGCRN.conf
+│   ├── ASTGCN/
+│   │   └── ASTGCN.conf
+│   ├── general_conf/
+│   │   ├── global_baselines.conf
+│   │   └── pretrain.conf
+│   ├── GWN/
+│   │   └── GWN.conf
+│   ├── MSDR/
+│   │   └── MSDR.conf
+│   ├── MTGNN/
+│   │   └── MTGNN.conf
+│   ├── OpenCity/
+│   │   └── OpenCity.conf
+│   ├── PDFormer/
+│   │   └── PDFormer.conf
+│   ├── STGCN/
+│   │   └── STGCN.conf
+│   ├── STSGCN/
+│   │   └── STSGCN.conf
+│   ├── STWA/
+│   │   └── STWA.conf
+│   └── TGCN/
+│       └── TGCN.conf
+├── data/
+│   ├── generate_ca_data.py
+│   └── README.md
+├── lib/
+│   ├── data_process.py
+│   ├── logger.py
+│   ├── metrics.py
+│   ├── Params_predictor.py
+│   ├── Params_pretrain.py
+│   ├── predifineGraph.py
+│   └── TrainInits.py
+├── model/
+│   ├── AGCRN/
+│   │   ├── AGCN.py
+│   │   ├── AGCRN.py
+│   │   ├── AGCRNCell.py
+│   │   └── args.py
+│   ├── ASTGCN/
+│   │   ├── args.py
+│   │   └── ASTGCN.py
+│   ├── GWN/
+│   │   ├── args.py
+│   │   └── GWN.py
+│   ├── MSDR/
+│   │   ├── args.py
+│   │   ├── gmsdr_cell.py
+│   │   └── gmsdr_model.py
+│   ├── MTGNN/
+│   │   ├── args.py
+│   │   └── MTGNN.py
+│   ├── OpenCity/
+│   │   ├── args.py
+│   │   └── OpenCity.py
+│   ├── PDFormer/
+│   │   ├── args.py
+│   │   └── PDFormer.py
+│   ├── ST_WA/
+│   │   ├── args.py
+│   │   ├── attention.py
+│   │   └── ST_WA.py
+│   ├── STGCN/
+│   │   ├── args.py
+│   │   └── stgcn.py
+│   ├── STSGCN/
+│   │   ├── args.py
+│   │   └── STSGCN.py
+│   └── TGCN/
+│       ├── args.py
+│       └── TGCN.py
+│   ├── Model.py
+│   ├── BasicTrainer.py
+│   ├── Run.py
+└── model_weights/
+    ├── OpenCity/
+    └── README.md
 ```
 
 
@@ -206,189 +173,87 @@ https://github.com/HKUDS/UrbanGPT/assets/90381931/9cd094b4-8fa3-486f-890d-631a08
 ### 2.Environment <a href='#all_catelogue'>[Back to Top]</a>
 Please first clone the repo and install the required environment, which can be done by running the following commands:
 ```shell
-conda create -n urbangpt python=3.9.13
+conda create -n opencity python=3.9.13
 
-conda activate urbangpt
+conda activate opencity
 
-# Torch with CUDA 11.7
-pip install torch==2.0.1 torchvision==0.15.2 torchaudio==2.0.2
+# Torch (other versions are also ok)
+pip install torch==1.9.0+cu111 torchvision==0.10.0+cu111 torchaudio==0.9.0 -f https://download.pytorch.org/whl/torch_stable.html
 
-# To support vicuna base model
-pip3 install "fschat[model_worker,webui]"
-
-# To install pyg and pyg-relevant packages
-pip install torch_geometric
-pip install pyg_lib torch_scatter torch_sparse torch_cluster torch_spline_conv -f https://data.pyg.org/whl/torch-2.0.1+cu117.html
-
-# Clone our UrabnGPT or download it
-git clone https://github.com/HKUDS/UrbanGPT.git
-cd UrbanGPT
+# Clone our OpenCity or download it
+git clone https://github.com/HKUDS/OpenCity.git
+cd OpenCity-main
 
 # Install required libraries
-# (The recommendation is to install separately using the following method)
-pip install deepspeed
-pip install ray
-pip install einops
-pip install wandb
-# （There is a version compatibility issue between "flash-attn" and "transformers". Please refer to the flash-attn [GitHub URL](https://github.com/Dao-AILab/flash-attention) for more information.）
-pip install flash-attn==2.3.5  # or download from (https://github.com/Dao-AILab/flash-attention/releases, e.g. flash_attn-2.3.5+cu117torch2.0cxx11abiFALSE-cp39-cp39-linux_x86_64.whl)
-pip install transformers==4.34.0
-
-# （or you can install according to the requirements file.）
 pip install -r requirements.txt
 ```
 
-<span id='Training UrbanGPT'/>
+<span id='Training OpenCity'/>
 
-### 3. Training UrbanGPT <a href='#all_catelogue'>[Back to Top]</a>
+### 3. Training OpenCity <a href='#all_catelogue'>[Back to Top]</a>
 
-<span id='Prepare Pre-trained Checkpoint'/>
+#### 3.1. Preparing Pre-trained Data  <a href='#all_catelogue'>[Back to Top]</a>
 
-#### 3.1. Preparing Pre-trained Checkpoint  <a href='#all_catelogue'>[Back to Top]</a>
-UrabnGPT is trained based on following excellent existing models.
-Please follow the instructions to prepare the checkpoints.
+* The model's generalization capabilities and predictive performance were extensively evaluated using a diverse set of large-scale, real-world public datasets covering various traffic-related data categories, including **Traffic Flow**, **Taxi Demand**, **Bicycle Trajectories**, **Traffic Speed Statistics**, and **Traffic Index Statistics**, from regions across the United States and China, such as New York City, Chicago, Los Angeles, the Bay Area, Shanghai, Shenzhen, and Chengdu. <br />
+* These data are organized in [OpenCity-dataset](https://huggingface.co/datasets/hkuds/OpenCity-dataset/tree/main). Please download it and put it at ./data. Subsequently, unzip all files and run [generate_ca_data.py](https://github.com/HKUDS/OpenCity/blob/main/data/generate_ca_data.py).
 
-- `Vicuna`:
-  Prepare our base model Vicuna, which is an instruction-tuned chatbot and base model in our implementation. Please download its weights [here](https://github.com/lm-sys/FastChat#model-weights). We generally utilize v1.5 and v1.5-16k model with 7B parameters. You should update the 'config.json' of vicuna, for example, the 'config.json' in v1.5-16k can be found in [config.json](https://huggingface.co/datasets/bjdwh/checkpoints/blob/main/train_config/config.json)
+#### 3.2. Pre-training <a href='#all_catelogue'>[Back to Top]</a>
 
-- `Spatio-temporal Encoder`:
-  We employ a simple TCNs-based spatio-temporal encoder to encode the spatio-temporal dependencies. The weights of [st_encoder](./checkpoints/st_encoder/pretrain_stencoder.pth) are pre-trained through a typical multi-step spatio-temporal prediction task.
+* To pretrain the OpenCity model with different configurations, you can execute the Run.py code. There are some examples:
+```
+# OpenCity-plus
+python Run.py -mode pretrain -model OpenCity -save_pretrain_path OpenCity-plus2.0.pth -batch_size 4 --embed_dim 512 --skip_dim 512 --enc_depth 6
 
-- `Spatio-temporal Train Data`:
-  We utilize pre-training data consisting of New York City's taxi, bike, and crime data, including spatio-temporal statistics, recorded timestamps, and information about regional points of interest (POIs). These data are organized in [train_data](https://huggingface.co/datasets/bjdwh/ST_data_urbangpt/tree/main/train_data). Please download it and put it at ./UrbanGPT/ST_data_urbangpt/train_data
+# OpenCity-base
+python Run.py -mode pretrain -model OpenCity -save_pretrain_path OpenCity-base2.0.pth -batch_size 8 --embed_dim 256 --skip_dim 256 --enc_depth 3
 
-<span id='Instruction Tuning'/>
-
-#### 3.2. Instruction Tuning <a href='#all_catelogue'>[Back to Top]</a>
-
-* **Start tuning:** After the aforementioned steps, you could start the instruction tuning by filling blanks at [urbangpt_train.sh](urbangpt_train.sh). There is an example as below: 
-
-```shell
-# to fill in the following path to run our UrbanGPT!
-model_path=./checkpoints/vicuna-7b-v1.5-16k
-instruct_ds=./ST_data_urbangpt/train_data/multi_NYC.json
-st_data_path=./ST_data_urbangpt/train_data/multi_NYC_pkl.pkl
-pretra_ste=ST_Encoder
-output_model=./checkpoints/UrbanGPT
-
-wandb offline
-python -m torch.distributed.run --nnodes=1 --nproc_per_node=8 --master_port=20001 \
-    urbangpt/train/train_mem.py \
-    --model_name_or_path ${model_path} \
-    --version v1 \
-    --data_path ${instruct_ds} \
-    --st_content ./TAXI.json \
-    --st_data_path ${st_data_path} \
-    --st_tower ${pretra_ste} \
-    --tune_st_mlp_adapter True \
-    --st_select_layer -2 \
-    --use_st_start_end \
-    --bf16 True \
-    --output_dir ${output_model} \
-    --num_train_epochs 3 \
-    --per_device_train_batch_size 4 \
-    --per_device_eval_batch_size 4 \
-    --gradient_accumulation_steps 1 \
-    --evaluation_strategy "no" \
-    --save_strategy "steps" \
-    --save_steps 2400 \
-    --save_total_limit 1 \
-    --learning_rate 2e-3 \
-    --weight_decay 0. \
-    --warmup_ratio 0.03 \
-    --lr_scheduler_type "cosine" \
-    --logging_steps 1 \
-    --tf32 True \
-    --model_max_length 2048 \
-    --gradient_checkpointing True \
-    --lazy_preprocess True \
-    --report_to wandb
+# OpenCity-mini
+python Run.py -mode pretrain -model OpenCity -save_pretrain_path OpenCity-mini2.0.pth -batch_size 16 --embed_dim 128 --skip_dim 128 --enc_depth 3
 
 ```
 
-<span id='Evaluating UrbanGPT'/>
+* Parameter setting instructions. The parameter settings consist of two parts: the pretrain config and other configs. To avoid any confusion arising from potential overlapping parameter names, we employ a hyphen (-) to specify the parameters of pretrain config and use a double hyphen (--) to specify the parameters of other configs. Please note that if two parameters have the same name, **the settings of the latter can override those of the former.**
 
-## 4. Evaluating UrbanGPT <a href='#all_catelogue'>[Back to Top]</a>
 
-<span id='Preparing Checkpoints and Data'/>
+## 4. Evaluating <a href='#all_catelogue'>[Back to Top]</a>
 
-#### 4.1. Preparing Checkpoints and Data <a href='#all_catelogue'>[Back to Top]</a>
+* **Preparing Checkpoints of OpenCity**. You can download our model using the following link: [OpenCity-Plus](https://huggingface.co/hkuds/OpenCity-Plus/tree/main), [OpenCity-Base](https://huggingface.co/hkuds/OpenCity-Base/tree/main), [OpenCity-Mini](https://huggingface.co/hkuds/OpenCity-Mini/tree/main)
 
-* **Checkpoints:** You could try to evaluate UrbanGPT by using your own model or our released checkpoints.
-* **Data:** We split test sets for NYC-taxi datasets and make the instruction data for evaluation. Please refer to the [evaluating](https://huggingface.co/datasets/bjdwh/ST_data_urbangpt).
-
-<span id='Running Evaluation'/>
-
-#### 4.2. Running Evaluation <a href='#all_catelogue'>[Back to Top]</a>
-
-You could start the second stage tuning by filling blanks at [urbangpt_eval.sh](urbangpt_eval.sh). There is an example as below: 
+* **Running Evaluation of OpenCity**. You can use our release model weights to evaluate, There is an example as below: 
 ```
-# to fill in the following path to evaluation!
-output_model=./checkpoints/tw2t_multi_reg-cla-gird
-datapath=./ST_data_urbangpt/NYC_taxi_cross-region/NYC_taxi.json
-st_data_path=./ST_data_urbangpt/NYC_taxi_cross-region/NYC_taxi_pkl.pkl
-res_path=./result_test/cross-region/NYC_taxi
-start_id=0
-end_id=51920
-num_gpus=8
-
-python ./urbangpt/eval/run_urbangpt.py --model-name ${output_model}  --prompting_file ${datapath} --st_data_path ${st_data_path} --output_res_path ${res_path} --start_id ${start_id} --end_id ${end_id} --num_gpus ${num_gpus}
+# Use OpenCity-plus to evaluate, please use only one dataset to test (e.g. dataset_use = ['PEMS07M'] in pretrain.config).
+python Run.py -mode test -model OpenCity -load_pretrain_path OpenCity-plus.pth -batch_size 2 --embed_dim 512 --skip_dim 512 --enc_depth 6
 ```
 
-#### 4.3. Evaluation Metric Calculation <a href='#all_catelogue'>[Back to Top]</a>
-
-<span id='Evaluation Metric Calculation'/>
-
-You can use [result_test.py](./metric_calculation/result_test.py) to calculate the performance metrics of the predicted results. 
-
----------
-
-
-## 5. Instructions Generation <a href='#all_catelogue'>[Back to Top]</a>
-
-<span id='Instructions Generation'/>
-
-You can use the code in [instruction_generate.py](./instruction_generate/instruction_generate.py) to generate the specific instructions you need. For example: 
+* **Running Evaluation of other baselines**. You can Replace the model name or use ori mode to train and test. For example: 
 
 ```
--dataset_name: Choose the dataset. # NYC_multi(for training)    NYC_taxi NYC_bike NYC_crime1 NYC_crime2 CHI_taxi (for testing)
-# Only one of the following options can be set to True
--for_zeroshot: for zero-shot prediction or not.
--for_supervised: for supervised prediction or not.
--for_ablation: for ablation study or not.
-
-# Create the instruction data for traning
-python instruction_generate.py -dataset_name NYC_multi
-
-# Create instruction data for the NYC_taxi dataset to facilitate testing in the zero-shot setting of UrbanGPT
-python instruction_generate.py -dataset_name NYC_taxi -for_zeroshot True
+# Run STGCN in ori mode
+python Run.py -mode ori -model STGCN -batch_size 64 --real_value False
 ```
-
----------
--->
 
 <!--
 ## Contact
 For any questions or feedback, feel free to contact [Zhonghang Li](mailto:bjdwh.zzh@gmail.com).
 -->
-<!--
+
 ## Citation
 
-If you find UrbanGPT useful in your research or applications, please kindly cite:
+If you find OpenCity useful in your research or applications, please kindly cite:
 
 ```
-@misc{li2024urbangpt,
-      title={UrbanGPT: Spatio-Temporal Large Language Models}, 
-      author={Zhonghang Li and Lianghao Xia and Jiabin Tang and Yong Xu and Lei Shi and Long Xia and Dawei Yin and Chao Huang},
+@misc{li2024opencity,
+      title={OpenCity: Open Spatio-Temporal Foundation Models for Traffic Prediction}, 
+      author={Zhonghang Li and Long Xia and Lei Shi and Yong Xu and Dawei Yin and Chao Huang},
       year={2024},
-      eprint={2403.00813},
+      eprint={},
       archivePrefix={arXiv},
       primaryClass={cs.CL}
 }
 ```
 
 
-
+<!--
 ## Acknowledgements
 You may refer to related work that serves as foundations for our framework and code repository, 
 [Vicuna](https://github.com/lm-sys/FastChat). We also partially draw inspirations from [GraphGPT](https://github.com/HKUDS/GraphGPT). The design of our website and README.md was inspired by [NExT-GPT](https://next-gpt.github.io/), and the design of our system deployment was inspired by [gradio](https://www.gradio.app) and [Baize](https://huggingface.co/spaces/project-baize/chat-with-baize). Thanks for their wonderful works.
