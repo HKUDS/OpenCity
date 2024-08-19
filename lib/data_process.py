@@ -238,7 +238,7 @@ def load_st_dataset(dataset, args):
         data_path = os.path.join(f'../data/{dataset}/{dataset}.npz')
         data = np.load(data_path)['data'][288*(31+29):288*(31+29+31+30), :]
         data[np.isnan(data)] = 0
-        week_start = 3
+        week_start = 7
         interval = 5
         week_day = 7
         holiday_list = None
