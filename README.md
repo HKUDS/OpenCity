@@ -19,8 +19,10 @@ This repository hosts the code, data, and model weights of **OpenCity**.
 
 -----
 ## 🎉 News 
+- [x] [2024.08.20] Add video.
 - [x] [2024.08.15] 🚀🚀 Release the code, model weights and datasets of OpenCity.
 - [x] [2024.08.15] Release baselines codes.
+
 
 🎯🎯📢📢 We upload the **models** and **data** used in our OpenCity on 🤗 **Huggingface**. We highly recommend referring to the table below for further details: 
 
@@ -29,12 +31,8 @@ This repository hosts the code, data, and model weights of **OpenCity**.
 | [https://huggingface.co/hkuds/OpenCity-Plus](https://huggingface.co/hkuds/OpenCity-Plus/tree/main) | It's the model weights of our OpenCity-Plus. |
 | [https://huggingface.co/datasets/hkuds/OpenCity-dataset/tree/main](https://huggingface.co/datasets/hkuds/OpenCity-dataset/tree/main) | We released the datasets used in OpenCity. |
 
-
-
 ## 👉 TODO 
 - [ ] Release the full paper.
-- [ ] Add video.
-
 
 
 -----------
@@ -58,10 +56,9 @@ Experimental results demonstrate that OpenCity exhibits exceptional zero-shot pr
 
 
 
-<!--
 ### Demo Video
-https://github.com/HKUDS/OpenCity/assets/90381931/9cd094b4-8fa3-486f-890d-631a08b19b4a
--->
+https://github.com/user-attachments/assets/39265dc5-0126-483b-951e-518c6cb210e0
+
 -----------
 <span id='Usage'/>
 
