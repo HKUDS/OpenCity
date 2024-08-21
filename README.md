@@ -1,7 +1,7 @@
 # OpenCity: Open Spatio-Temporal Foundation Models for Traffic Prediction
 
 
-A pytorch implementation for the paper: [OpenCity: Open Spatio-Temporal Foundation Models for Traffic Prediction]<br />  
+A pytorch implementation for the paper: [OpenCity: Open Spatio-Temporal Foundation Models for Traffic Prediction](https://arxiv.org/abs/2408.10269)<br />  
 
 [Zhonghang Li](https://scholar.google.com/citations?user=__9uvQkAAAAJ), [Long Xia](https://scholar.google.com/citations?user=NRwerBAAAAAJ), [Lei Shi](https://harryshil.github.io/), [Yong Xu](https://scholar.google.com/citations?user=1hx5iwEAAAAJ), [Dawei Yin](https://www.yindawei.com/), [Chao Huang](https://sites.google.com/view/chaoh)* (*Correspondence)<br />  
 
@@ -189,7 +189,7 @@ pip install -r requirements.txt
 
 ### 3. Training OpenCity <a href='#all_catelogue'>[Back to Top]</a>
 
-#### 3.1. Preparing Pre-trained Data  <a href='#all_catelogue'>[Back to Top]</a>
+#### 3.1. Preparing Pre-trained Data <a href='#all_catelogue'>[Back to Top]</a>
 
 * The model's generalization capabilities and predictive performance were extensively evaluated using a diverse set of large-scale, real-world public datasets covering various traffic-related data categories, including **Traffic Flow**, **Taxi Demand**, **Bicycle Trajectories**, **Traffic Speed Statistics**, and **Traffic Index Statistics**, from regions across the United States and China, such as New York City, Chicago, Los Angeles, the Bay Area, Shanghai, Shenzhen, and Chengdu. <br />
 * These data are organized in [OpenCity-dataset](https://huggingface.co/datasets/hkuds/OpenCity-dataset/tree/main). Please download it and put it at ./data. Subsequently, unzip all files and run [generate_ca_data.py](https://github.com/HKUDS/OpenCity/blob/main/data/generate_ca_data.py).
@@ -243,9 +243,8 @@ If you find OpenCity useful in your research or applications, please kindly cite
       title={OpenCity: Open Spatio-Temporal Foundation Models for Traffic Prediction}, 
       author={Zhonghang Li and Long Xia and Lei Shi and Yong Xu and Dawei Yin and Chao Huang},
       year={2024},
-      eprint={},
-      archivePrefix={arXiv},
-      primaryClass={cs.CL}
+      eprint={2408.10269},
+      archivePrefix={arXiv}
 }
 ```
 
