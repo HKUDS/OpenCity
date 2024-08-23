@@ -1,5 +1,6 @@
 # OpenCity: Open Spatio-Temporal Foundation Models for Traffic Prediction
 
+<img src='opencity.png' />
 
 A pytorch implementation for the paper: [OpenCity: Open Spatio-Temporal Foundation Models for Traffic Prediction](https://arxiv.org/abs/2408.10269)<br />  
 
@@ -19,6 +20,7 @@ This repository hosts the code, data, and model weights of **OpenCity**.
 
 -----
 ## 🎉 News 
+- [x] [2024.08.21] Release the full paper.
 - [x] [2024.08.20] Add video.
 - [x] [2024.08.15] 🚀🚀 Release the code, model weights and datasets of OpenCity.
 - [x] [2024.08.15] Release baselines codes.
@@ -32,7 +34,7 @@ This repository hosts the code, data, and model weights of **OpenCity**.
 | [https://huggingface.co/datasets/hkuds/OpenCity-dataset/tree/main](https://huggingface.co/datasets/hkuds/OpenCity-dataset/tree/main) | We released the datasets used in OpenCity. |
 
 ## 👉 TODO 
-- [ ] Release the full paper.
+...
 
 
 -----------
@@ -70,9 +72,9 @@ https://github.com/user-attachments/assets/39265dc5-0126-483b-951e-518c6cb210e0
 * <a href='#Code Structure'>1. Code Structure</a>
 * <a href='#Environment'>2. Environment </a>
 * <a href='#Training OpenCity'>3. Training OpenCity </a>
-  * <a href='#Preparing Pre-trained Data'>3.1. Preparing Pre-trained Data</a>
-  * <a href='#Pre-training'>3.2. Pre-training</a>
-* <a href='#Evaluating'>4. Evaluating</a>
+  * <a href='#Preparing Pre-trained Data'>3.1. Preparing Pre-trained Data </a>
+  * <a href='#Pre-training'>3.2. Pre-training </a>
+* <a href='#Evaluating'>4. Evaluating </a>
 ****
 
 
@@ -189,10 +191,14 @@ pip install -r requirements.txt
 
 ### 3. Training OpenCity <a href='#all_catelogue'>[Back to Top]</a>
 
+<span id='Preparing Pre-trained Data'/>
+
 #### 3.1. Preparing Pre-trained Data <a href='#all_catelogue'>[Back to Top]</a>
 
 * The model's generalization capabilities and predictive performance were extensively evaluated using a diverse set of large-scale, real-world public datasets covering various traffic-related data categories, including **Traffic Flow**, **Taxi Demand**, **Bicycle Trajectories**, **Traffic Speed Statistics**, and **Traffic Index Statistics**, from regions across the United States and China, such as New York City, Chicago, Los Angeles, the Bay Area, Shanghai, Shenzhen, and Chengdu. <br />
 * These data are organized in [OpenCity-dataset](https://huggingface.co/datasets/hkuds/OpenCity-dataset/tree/main). Please download it and put it at ./data. Subsequently, unzip all files and run [generate_ca_data.py](https://github.com/HKUDS/OpenCity/blob/main/data/generate_ca_data.py).
+
+<span id='Pre-training'/>
 
 #### 3.2. Pre-training <a href='#all_catelogue'>[Back to Top]</a>
 
@@ -211,8 +217,9 @@ python Run.py -mode pretrain -model OpenCity -save_pretrain_path OpenCity-mini2.
 
 * Parameter setting instructions. The parameter settings consist of two parts: the pretrain config and other configs. To avoid any confusion arising from potential overlapping parameter names, we employ a hyphen (-) to specify the parameters of pretrain config and use a double hyphen (--) to specify the parameters of other configs. Please note that if two parameters have the same name, **the settings of the latter can override those of the former.**
 
+<span id='Evaluating'/>
 
-## 4. Evaluating <a href='#all_catelogue'>[Back to Top]</a>
+### 4. Evaluating <a href='#all_catelogue'>[Back to Top]</a>
 
 * **Preparing Checkpoints of OpenCity**. You can download our model using the following link: [OpenCity-Plus](https://huggingface.co/hkuds/OpenCity-Plus/tree/main), [OpenCity-Base](https://huggingface.co/hkuds/OpenCity-Base/tree/main), [OpenCity-Mini](https://huggingface.co/hkuds/OpenCity-Mini/tree/main)
 
