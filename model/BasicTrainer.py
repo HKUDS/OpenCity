@@ -49,33 +49,35 @@ class Trainer(object):
                 self.logger.warning('Gradient explosion detected. Ending...')
                 break
 
-            # Val
-            val_epoch_loss = self.multi_val_epoch(epoch)
-            # Best state and early stop epoch
-            val_loss_list.append(val_epoch_loss)
-            if val_epoch_loss < best_loss:
-                best_loss = val_epoch_loss
-                not_improved_count = 0
-                best_state = True
-            else:
-                not_improved_count += 1
-                best_state = False
+            if self.args.mode != 'pretrain' and self.args.val_ratio > 0:
+                # Val
+                val_epoch_loss = self.multi_val_epoch(epoch)
+                # Best state and early stop epoch
+                val_loss_list.append(val_epoch_loss)
+                if val_epoch_loss < best_loss:
+                    best_loss = val_epoch_loss
+                    not_improved_count = 0
+                    best_state = True
+                else:
+                    not_improved_count += 1
+                    best_state = False
 
-            # early stop
-            if self.args.early_stop:
-                if not_improved_count == self.args.early_stop_patience:
-                    self.logger.info("Validation performance didn\'t improve for {} epochs. "
-                                     "Training stops.".format(self.args.early_stop_patience))
-                    break
+                # early stop
+                if self.args.early_stop:
+                    if not_improved_count == self.args.early_stop_patience:
+                        self.logger.info("Validation performance didn\'t improve for {} epochs. "
+                                         "Training stops.".format(self.args.early_stop_patience))
+                        break
 
-            # save the best state
-            if best_state == True:
-                self.logger.info('*********************************Current best model saved!')
-                # self.test(self.model, self.args, self.scaler_dict, self.test_dataloader, self.logger)
-                best_model = copy.deepcopy(self.model.state_dict())
+                # save the best state
+                if best_state == True:
+                    self.logger.info('*********************************Current best model saved!')
+                    # self.test(self.model, self.args, self.scaler_dict, self.test_dataloader, self.logger)
+                    best_model = copy.deepcopy(self.model.state_dict())
         # test
-        self.model.load_state_dict(best_model)
-        self.test(self.model, self.args, self.scaler_dict, self.test_dataloader, self.logger)
+        if self.args.mode != 'pretrain' and self.args.val_ratio > 0:
+            self.model.load_state_dict(best_model)
+            self.test(self.model, self.args, self.scaler_dict, self.test_dataloader, self.logger)
         print("Pre-train finish.")
 
 
