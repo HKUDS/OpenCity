@@ -317,7 +317,12 @@ class OpenCity(nn.Module):
         ])
 
         self.flatten = nn.Flatten(start_dim=-2)
-        self.linear = nn.Linear(24*self.skip_dim, self.output_window)
+        num_patches = (
+            (self.input_window - self.patch_embedding_flow.patch_len)
+            // self.patch_embedding_flow.stride
+            + 1
+        )
+        self.linear = nn.Linear(num_patches * self.skip_dim, self.output_window)
 
 
     def forward(self, input, lbls, select_dataset):
