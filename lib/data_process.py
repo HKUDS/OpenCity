@@ -18,11 +18,13 @@ def time_add(data, week_start, interval=5, weekday_only=False, holiday_list=None
     week_init = week_start
     holiday_init = 1
 
-    for index in range(day_start//interval, data.shape[0]+day_start//interval):
-        if (index) % time_slot == 0 and index!=0:
+    # Calendar slots may start after midnight, but the array row index starts at zero.
+    start_slot = day_start // interval
+    for row, index in enumerate(range(start_slot, data.shape[0] + start_slot)):
+        if index % time_slot == 0 and index != 0:
             day_init = 0
         day_init = day_init + interval
-        if (index) % time_slot == 0 and index !=0:
+        if index % time_slot == 0 and index != 0:
             week_init = week_init + 1
         if week_init > week_max:
             week_init = 1
@@ -31,9 +33,9 @@ def time_add(data, week_start, interval=5, weekday_only=False, holiday_list=None
         else:
             holiday_init = 2
 
-        day_data[index:index + 1, :] = day_init
-        week_data[index:index + 1, :] = week_init
-        holiday_data[index:index + 1, :] = holiday_init
+        day_data[row:row + 1, :] = day_init
+        week_data[row:row + 1, :] = week_init
+        holiday_data[row:row + 1, :] = holiday_init
 
     if holiday_list is None:
         k = 1
@@ -273,11 +275,14 @@ def split_data_by_ratio(data, val_ratio, test_ratio):
     data_len = data.shape[0]
     if test_ratio == 0:
         test_data = data[:0]
-        val_data = data[-int(data_len * (test_ratio + val_ratio)):-int(data_len * test_ratio)]
         if val_ratio == 0:
+            val_data = data[:0]
             train_data = data
         else:
-            train_data = data[:-int(data_len * (test_ratio + val_ratio))]
+            val_len = int(data_len * val_ratio)
+            val_start = data_len - val_len
+            val_data = data[val_start:]
+            train_data = data[:val_start]
     else:
         test_data = data[-int(data_len*test_ratio):]
         val_data = data[-int(data_len*(test_ratio+val_ratio)):-int(data_len*test_ratio)]
