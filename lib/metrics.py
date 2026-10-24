@@ -78,8 +78,10 @@ def CORR_torch(pred, true, mask_value=None):
     dims = (0, 1, 2)
     pred_mean = pred.mean(dim=dims)
     true_mean = true.mean(dim=dims)
-    pred_std = pred.std(dim=dims)
-    true_std = true.std(dim=dims)
+    # The covariance below uses the population mean, so use population
+    # standard deviations as well (otherwise perfect predictions score < 1).
+    pred_std = pred.std(dim=dims, unbiased=False)
+    true_std = true.std(dim=dims, unbiased=False)
     correlation = ((pred - pred_mean)*(true - true_mean)).mean(dim=dims) / (pred_std*true_std)
     index = (true_std != 0)
     correlation = (correlation[index]).mean()
@@ -202,16 +204,16 @@ def CORR_np(pred, true, mask_value=None):
     #input B, T, N, D or B, N, D or B, N
     if len(pred.shape) == 2:
         #B, N
-        pred = pred.unsqueeze(dim=1).unsqueeze(dim=1)
-        true = true.unsqueeze(dim=1).unsqueeze(dim=1)
+        pred = np.expand_dims(np.expand_dims(pred, axis=1), axis=1)
+        true = np.expand_dims(np.expand_dims(true, axis=1), axis=1)
     elif len(pred.shape) == 3:
         #np.transpose include permute, B, T, N
         pred = np.expand_dims(pred.transpose(0, 2, 1), axis=1)
         true = np.expand_dims(true.transpose(0, 2, 1), axis=1)
     elif len(pred.shape)  == 4:
         #B, T, N, D -> B, T, D, N
-        pred = pred.transpose(0, 1, 2, 3)
-        true = true.transpose(0, 1, 2, 3)
+        pred = pred.transpose(0, 1, 3, 2)
+        true = true.transpose(0, 1, 3, 2)
     else:
         raise ValueError
     dims = (0, 1, 2)
@@ -235,6 +237,10 @@ def All_Metrics(pred, true, mask1, mask2):
         rrse = RRSE_np(pred, true, mask1)
         # corr = 0
         corr = CORR_np(pred, true, mask1)
+        mae_count = rmse_count = mse_count = (
+            np.count_nonzero(true > mask1) if mask1 is not None else None
+        )
+        mape_count = np.count_nonzero(true > mask2) if mask2 is not None else None
         #pnbi = PNBI_np(pred, true, mask1)
         #opnbi = oPNBI_np(pred, true, mask2)
     elif type(pred) == torch.Tensor:
